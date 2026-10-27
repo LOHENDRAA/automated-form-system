@@ -250,6 +250,7 @@
     </svg>
     <h1>One last step</h1>
     <p>We're opening the Rizurf Google Form with your answers filled in. <strong>Attach your CV there and press Submit</strong> to finish your application.</p>
+    <p>If Google asks <em>"Continue current draft?"</em>, choose <strong>Continue</strong>. "Use previous draft" replaces your answers with an old, empty draft.</p>
     <p><a id="handoff">Not redirected? Continue to the Google Form →</a></p>
   </div>
 </main>
@@ -426,7 +427,7 @@ form.addEventListener('submit', e => {
   // The CV file can't be pre-filled, so the applicant attaches it and submits on the Google Form.
   document.getElementById('handoff').href = url;
   form.hidden = true; document.getElementById('done').hidden = false; scrollTo(0, 0);
-  setTimeout(() => location.href = url, 2500);
+  setTimeout(() => location.href = url, 6000); // long enough to read the draft tip above
 });
 </script>
 </body>

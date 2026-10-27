@@ -1,0 +1,3 @@
+{
+  "rewrites": [{ "source": "/", "destination": "/Rizurf_Internship_Form.html" }]
+}
