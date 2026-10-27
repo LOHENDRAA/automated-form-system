@@ -338,17 +338,21 @@ function progress() {
 }
 
 function reading(file) {
+  // A new CV replaces the last CV's answers (still marked .auto, so the applicant didn't edit them); fill() skips filled fields.
+  form.querySelectorAll('input.auto').forEach(el => { el.value = ''; el.classList.remove('auto'); });
+  form.querySelectorAll('fieldset.auto').forEach(f => { f.querySelectorAll('input').forEach(r => r.checked = false); f.classList.remove('auto'); });
   drop.classList.add('scanning');
   document.getElementById('dropTitle').textContent = 'Reading ' + file.name + '…';
   status.textContent = '';
 }
 
-function done(file, n) {
+function done(file, n, scanned) {
   drop.classList.remove('scanning'); drop.classList.add('has-file');
   document.getElementById('dropTitle').textContent = '✓ ' + file.name;
   document.getElementById('dropSub').textContent = 'Click to replace';
   status.textContent = n
     ? `✨ We filled in ${n} fields from your CV. They're marked "from CV", so give them a quick check.`
+    : scanned ? `This PDF is a scanned image with no text we can read, so please fill in the form below.`
     : `We couldn't read details from this CV, so please fill in the form below.`;
   document.getElementById('rest').hidden = false;
   progress();
@@ -359,9 +363,9 @@ async function handle(file) {
   if (file.type !== 'application/pdf') { status.textContent = 'Please upload a PDF file.'; return; }
   if (file.size > MAX_MB * 1024 * 1024) { status.textContent = `That file is over ${MAX_MB} MB. Please upload a smaller PDF.`; return; }
   reading(file);
-  let n = 0;
-  try { const text = await pdfText(file); n = fill(await aiParse(text).catch(() => parseCV(text))); } catch (e) { /* unreadable PDF: fall through to manual entry */ }
-  done(file, n);
+  let n = 0, text = '';
+  try { text = await pdfText(file); n = fill(await aiParse(text).catch(() => parseCV(text))); } catch (e) { /* unreadable PDF: fall through to manual entry */ }
+  done(file, n, !text.trim());
 }
 
 // Prototype only: dummy CV text, run through the same parser a real PDF goes through.
