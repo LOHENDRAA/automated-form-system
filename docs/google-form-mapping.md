@@ -34,9 +34,23 @@ The HR system is not ready yet, and no confirmation email is sent for now.
 2. **Channel option.** Google's option is `Job Platforms (LinkedIn, Jobstreet, Indeed, etc.)`. Ours is `Job Platforms`. Send the Google wording. All other option values already match exactly; Google rejects answers that don't.
 3. **"Other" answers** (nationality, channel). Send `entry.X=__other_option__` and `entry.X.other_option_response=<typed text>`.
 4. **Dates.** Send three values per date: `entry.X_year`, `entry.X_month`, `entry.X_day`.
-5. **CV.** It is an optional file upload in Google, and uploading requires a Google sign-in. A custom form cannot send the file. Decision pending with the manager: (A) applicant uploads on the Google Form after ours, (B) drop the file and add a CV link question, (C) Apps Script that stores the file in Drive.
+5. **CV.** It is an optional file upload in Google, and uploading requires a Google sign-in. A custom form cannot send the file. Recommended plan (A, pending the manager's OK): hand the applicant over to the Google Form with every answer pre-filled, so they only attach the CV and submit. One response row, real CV file. Fallback (B): drop the file and add a CV link question, then `POST` directly (see "Sending" below).
 6. **Wording.** Decided: use "Apprenticeship", as in the Google Form. Done in the HTML title, header pill and section heading.
 
-## Sending (no-CORS)
+## Sending
 
-`fetch(url, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(data) })`. The response is opaque, so treat a resolved promise as success.
+### Plan A (recommended, pending manager): pre-filled hand-off
+
+On submit, do not `POST`. Build a pre-filled link and open it (`location.href = url`):
+
+`https://docs.google.com/forms/d/e/<FORM ID>/viewform?usp=pp_url&entry.1190359073=<email>&entry.756689484=<phone>&...`
+
+- Encode every value with `encodeURIComponent` / `URLSearchParams`.
+- Dates in a pre-filled link are `entry.X=YYYY-MM-DD` (the `_year/_month/_day` split in note 4 is only for `POST`).
+- "Other" answers work the same way: `entry.X=__other_option__&entry.X.other_option_response=<text>`.
+- The CV file cannot be pre-filled; the applicant attaches it on the Google Form and presses Submit. Our own "done" screen should say so.
+- Test by opening a generated link: every field should arrive filled in.
+
+### Plan B (fallback): direct `POST`, no CV file
+
+`fetch(url, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(data) })` to the `formResponse` URL. The response is opaque, so treat a resolved promise as success. Dates use the `_year/_month/_day` split from note 4.
