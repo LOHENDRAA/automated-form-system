@@ -35,7 +35,7 @@ The HR system is not ready yet, and no confirmation email is sent for now.
 3. **"Other" answers** (nationality, channel). Send `entry.X=__other_option__` and `entry.X.other_option_response=<typed text>`.
 4. **Dates.** Send three values per date: `entry.X_year`, `entry.X_month`, `entry.X_day`.
 5. **CV.** It is an optional file upload in Google, and uploading requires a Google sign-in. A custom form cannot send the file. Decision pending with the manager: (A) applicant uploads on the Google Form after ours, (B) drop the file and add a CV link question, (C) Apps Script that stores the file in Drive.
-6. **Wording.** Their form says "Apprenticeship", ours says "Internship". Ask which to use.
+6. **Wording.** Decided: use "Apprenticeship", as in the Google Form. Done in the HTML title, header pill and section heading.
 
 ## Sending (no-CORS)
 
