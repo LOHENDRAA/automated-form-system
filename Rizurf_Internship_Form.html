@@ -216,7 +216,7 @@
             <label class="chip"><input type="radio" name="channel" value="Google">Google</label>
             <label class="chip"><input type="radio" name="channel" value="Facebook">Facebook</label>
             <label class="chip"><input type="radio" name="channel" value="Instagram">Instagram</label>
-            <label class="chip"><input type="radio" name="channel" value="Job Platforms">Job platforms</label>
+            <label class="chip"><input type="radio" name="channel" value="Job Platforms (LinkedIn, Jobstreet, Indeed, etc.)">Job platforms</label>
             <label class="chip"><input type="radio" name="channel" value="University Career Center">Uni career center</label>
             <label class="chip"><input type="radio" name="channel" value="University Portal">Uni portal</label>
             <label class="chip"><input type="radio" name="channel" value="Word of Mouth">Word of mouth</label>
@@ -237,8 +237,8 @@
         <label class="f">Anything else you would like us to know?
           <span class="hint">Otherwise, leave this blank.</span>
           <textarea name="notes" rows="3"></textarea></label>
-        <p class="sub" style="margin-top:22px">You're all set! Click <strong>Submit</strong> to finalize your registration. Our team will get back to you if your profile matches our upcoming openings.</p>
-        <button type="submit" class="submit">Submit application</button>
+        <p class="sub" style="margin-top:22px">You're all set! Click <strong>Continue</strong>, then attach your CV on the Google Form and submit it there. Our team will get back to you if your profile matches our upcoming openings.</p>
+        <button type="submit" class="submit">Continue to final step</button>
       </div>
     </div>
   </form>
@@ -248,9 +248,9 @@
       <circle cx="28" cy="28" r="26" fill="none" stroke="#19a3b4" stroke-width="3"/>
       <path d="M17 29l7 7 15-15" fill="none" stroke="#19a3b4" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <h1>You're in! 🎉</h1>
-    <p>We've received your application for <strong id="ackPos"></strong>.</p>
-    <p>A confirmation is on its way to <strong id="ackEmail"></strong>. We'll reach out if your background matches our upcoming openings.</p>
+    <h1>One last step</h1>
+    <p>We're opening the Rizurf Google Form with your answers filled in. <strong>Attach your CV there and press Submit</strong> to finish your application.</p>
+    <p><a id="handoff">Not redirected? Continue to the Google Form →</a></p>
   </div>
 </main>
 <footer>© Rizurf · Your details are only used for recruitment.</footer>
@@ -285,9 +285,11 @@ function parseCV(text) {
                ['Degree', /\bbachelor|\bdegree\b|\bb\.?sc\b|\bhons\b|honours/i], ['Diploma', /\bdiploma\b/i],
                ['Foundation', /\bfoundation\b|\ba-?levels?\b|\bstpm\b|matriculation/i], ['Certificate', /\bcertificate\b|\bspm\b/i]];
   return {
-    name: lines.find(l => !/curriculum|vitae|resume|profile/i.test(l) && /^[A-Za-z][A-Za-z.'\/ -]{2,60}$/.test(l)
-                          && l.split(/\s+/).length >= 2 && l.split(/\s+/).length <= 7),
-    email: m(/[\w.+-]+@[\w-]+(\.[\w-]+)+/),
+    name: lines.find(l => !/curriculum|vitae|resume|profile|universit|college|institut|polytechnic|\b(with|strong|experience|skills)\b/i.test(l) && /^[A-Za-z][A-Za-z.'\/ -]{2,60}$/.test(l)
+                          && l.split(/\s+/).length >= 2 && l.split(/\s+/).length <= 7
+                          && l.split(/\s+/).every(w => /^[A-Z]/.test(w) || /^(bin|binti|binte|bt)$/i.test(w))),
+    // Text from PDFs has no spaces between items, so stop the domain before a capital letter like "comSelangor".
+    email: m(/[\w.+-]+@[\w-]+(\.[a-z]{2,})+(?![a-z])/),
     phone: normalizePhone(m(/(\+?6?0)\d{1,2}[\s-]?\d{3,4}[\s-]?\d{4}/)),
     university: lines.find(l => /universit|college|institut|polytechnic|politeknik/i.test(l)),
     education: (EDU.find(([, re]) => re.test(text)) || [])[0],
@@ -295,6 +297,20 @@ function parseCV(text) {
     github: url(/(https?:\/\/)?(www\.)?github\.com\/[\w-]+/i),
     portfolio: url(/(https?:\/\/|www\.)(?!(www\.)?(linkedin|github)\.com)[\w-]+(\.[\w-]+)+(\/[^\s]*)?/i),
   };
+}
+
+// Endpoint holding the OpenAI key (api/parse-cv.js). On Hostinger, set this to the full Vercel URL.
+const PARSE_API = '/api/parse-cv';
+
+// AI answers win; the local parser fills whatever the AI left empty.
+async function aiParse(text) {
+  if (!text.trim()) throw new Error('no text in PDF');
+  const r = await fetch(PARSE_API, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ text }), signal: AbortSignal.timeout(20000) });
+  if (!r.ok) throw new Error('parse API ' + r.status);
+  const ai = await r.json();
+  if (ai.phone) ai.phone = normalizePhone(ai.phone);
+  return Object.assign(parseCV(text), Object.fromEntries(Object.entries(ai).filter(([, v]) => v)));
 }
 
 const form = document.getElementById('form'), status = document.getElementById('status');
@@ -343,7 +359,7 @@ async function handle(file) {
   if (file.size > MAX_MB * 1024 * 1024) { status.textContent = `That file is over ${MAX_MB} MB. Please upload a smaller PDF.`; return; }
   reading(file);
   let n = 0;
-  try { n = fill(parseCV(await pdfText(file))); } catch (e) { /* unreadable PDF: fall through to manual entry */ }
+  try { const text = await pdfText(file); n = fill(await aiParse(text).catch(() => parseCV(text))); } catch (e) { /* unreadable PDF: fall through to manual entry */ }
   done(file, n);
 }
 
@@ -381,15 +397,36 @@ form.addEventListener('change', () => {
 });
 form.addEventListener('input', progress);
 
+// Google Form the applicant is handed to, answers pre-filled (see docs/google-form-mapping.md, Plan A).
+const GOOGLE_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSdoHL8opn_51oLNs8Nsh744Qsho1fiAlUMUIlYTX0KujvDYqg/viewform';
+const ENTRY = {
+  firstName: 'entry.851204678', lastName: 'entry.2142187308', email: 'entry.1190359073', phone: 'entry.756689484',
+  university: 'entry.406614572', education: 'entry.635388759', position: 'entry.1133062944', nationality: 'entry.2066529468',
+  channel: 'entry.233748710', start: 'entry.577128580', end: 'entry.1650332114', linkedin: 'entry.794138953',
+  github: 'entry.1068025778', portfolio: 'entry.259018255', notes: 'entry.221000101',
+};
+
 form.addEventListener('submit', e => {
   e.preventDefault();
   if (!form.reportValidity()) return;
   const d = Object.fromEntries(new FormData(form));
-  // Preview only: nothing leaves the browser. The real version sends `d` + the CV file to the HR backend (separate project).
-  console.log('Submission', d);
-  document.getElementById('ackPos').textContent = d.position;
-  document.getElementById('ackEmail').textContent = d.email;
+  const [first, ...rest] = d.name.trim().split(/\s+/);
+  const answers = {
+    [ENTRY.firstName]: first, [ENTRY.lastName]: rest.join(' '), [ENTRY.email]: d.email, [ENTRY.phone]: d.phone,
+    [ENTRY.university]: d.university, [ENTRY.education]: d.education, [ENTRY.position]: d.position,
+    [ENTRY.start]: d.start, [ENTRY.end]: d.end, // pre-filled links take dates as YYYY-MM-DD
+    [ENTRY.linkedin]: d.linkedin, [ENTRY.github]: d.github, [ENTRY.portfolio]: d.portfolio, [ENTRY.notes]: d.notes,
+  };
+  // Google's "Other" option takes a sentinel value, with the typed text in a separate `.other_option_response` field.
+  for (const [k, otherKey] of [['nationality', 'nationalityOther'], ['channel', 'channelOther']]) {
+    answers[ENTRY[k]] = d[k] === 'Other' ? '__other_option__' : d[k];
+    if (d[k] === 'Other') answers[ENTRY[k] + '.other_option_response'] = d[otherKey];
+  }
+  const url = GOOGLE_FORM + '?' + new URLSearchParams([['usp', 'pp_url'], ...Object.entries(answers).filter(([, v]) => v)]);
+  // The CV file can't be pre-filled, so the applicant attaches it and submits on the Google Form.
+  document.getElementById('handoff').href = url;
   form.hidden = true; document.getElementById('done').hidden = false; scrollTo(0, 0);
+  setTimeout(() => location.href = url, 2500);
 });
 </script>
 </body>
