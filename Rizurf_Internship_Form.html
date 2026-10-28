@@ -401,7 +401,7 @@ form.addEventListener('change', () => {
 form.addEventListener('input', progress);
 
 // Google Form the applicant is handed to, answers pre-filled (see docs/google-form-mapping.md, Plan A).
-const GOOGLE_FORM = 'https://automated-form-system.vercel.app/';
+const GOOGLE_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSdoHL8opn_51oLNs8Nsh744Qsho1fiAlUMUIlYTX0KujvDYqg/viewform';
 const ENTRY = {
   firstName: 'entry.851204678', lastName: 'entry.2142187308', email: 'entry.1190359073', phone: 'entry.756689484',
   university: 'entry.406614572', education: 'entry.635388759', position: 'entry.1133062944', nationality: 'entry.2066529468',
@@ -425,7 +425,7 @@ form.addEventListener('submit', e => {
     answers[ENTRY[k]] = d[k] === 'Other' ? '__other_option__' : d[k];
     if (d[k] === 'Other') answers[ENTRY[k] + '.other_option_response'] = d[otherKey];
   }
-  const url = GOOGLE_FORM;
+  const url = GOOGLE_FORM + '?' + new URLSearchParams([['usp', 'pp_url'], ...Object.entries(answers).filter(([, v]) => v)]);
   // The CV file can't be pre-filled, so the applicant attaches it and submits on the Google Form.
   document.getElementById('handoff').href = url;
   form.hidden = true; document.getElementById('done').hidden = false; scrollTo(0, 0);
