@@ -109,7 +109,7 @@
   #done p { color:var(--muted); max-width:460px; margin:8px auto; }
   #done strong { color:var(--ink); }
   #done .track { max-width:320px; margin:8px auto 0; }
-  #done:not([hidden]) #handoffBar { animation:fill 6s linear forwards; } /* 6s = the redirect delay in the submit handler */
+  #done:not([hidden]) #handoffBar { animation:fill 2s linear forwards; } /* 2s = the redirect delay in the submit handler */
   @keyframes fill { to { width:100%; } }
 
   footer { text-align:center; color:var(--muted); font-size:.8rem; padding-bottom:32px; }
@@ -249,7 +249,7 @@
     <p><strong>Your application isn't sent yet.</strong></p>
     <p>We're opening the Rizurf Google Form with your answers filled in. <strong>Attach your CV there and press Submit</strong> to finish your application.</p>
     <p>If Google asks <em>"Continue current draft?"</em>, choose <strong>Continue</strong>. "Use previous draft" replaces your answers with an old, empty draft.</p>
-    <p><a id="handoff">Not redirected? Continue to the Google Form →</a></p>
+    <p><a id="handoff" class="submit" style="display:block;text-align:center;text-decoration:none">Continue to the Google Form now</a></p>
   </div>
 </main>
 <footer>© Rizurf · Your details are only used for recruitment.</footer>
@@ -429,7 +429,7 @@ form.addEventListener('submit', e => {
   // The CV file can't be pre-filled, so the applicant attaches it and submits on the Google Form.
   document.getElementById('handoff').href = url;
   form.hidden = true; document.getElementById('done').hidden = false; scrollTo(0, 0);
-  setTimeout(() => location.href = url, 6000); // long enough to read the draft tip above
+  setTimeout(() => location.href = url, 2000); // marketing: 6s felt too slow; the button skips the wait entirely
 });
 </script>
 </body>
