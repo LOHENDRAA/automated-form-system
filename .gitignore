@@ -1,0 +1,5 @@
+# Secrets: the OpenAI key must never be committed.
+.env
+.env.*
+!.env.example
+.vercel

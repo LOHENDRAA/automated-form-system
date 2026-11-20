@@ -1,0 +1,106 @@
+<!doctype html>
+<!--
+  Acme internship confirmation email (preview filled with sample data).
+  Subject: Acme Internship: Application Received ✓
+  Values that change per applicant: Nurul Aisyah binti Kamarudin (name), Software Engineering (position),
+  5 Jan 2027 – 30 Jun 2027 (dates), Asia Pacific University... (university), 9 Oct 2026 (submitted date).
+  Dark mode: Gmail iOS inverts colours; the gm-screen/gm-diff wrappers keep white text white.
+  Built with tables + inline styles so it renders in Gmail, Outlook and Apple Mail.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acme Confirmation Email</title>
+<style>
+  /* Gmail iOS dark mode inverts text colours; screen+difference blending flips them back. */
+  u + .body .gm-screen { background:#000; mix-blend-mode:screen; }
+  u + .body .gm-diff { background:#000; mix-blend-mode:difference; }
+  @media (max-width:480px) {
+    .px { padding-left:20px !important; padding-right:20px !important; }
+    .outer { padding:12px 6px !important; }
+  }
+</style>
+</head>
+<body class="body" style="margin:0;padding:0;background:#eef2f6;">
+<!-- Inbox preview text (shown next to the subject line, hidden in the email) -->
+<div style="display:none;max-height:0;overflow:hidden;">We've got your application for Software Engineering. Here's what happens next.</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef2f6;">
+<tr><td class="outer" align="center" style="padding:32px 12px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:20px;overflow:hidden;font-family:'Plus Jakarta Sans','Segoe UI',Helvetica,Arial,sans-serif;color:#13213c;">
+
+    <!-- Header -->
+    <tr><td align="center" bgcolor="#13213c" style="background:#13213c;background-image:linear-gradient(135deg,#13213c 0%,#1d3157 60%,#1b4a66 100%);padding:36px 24px 40px;">
+      <div style="font-size:28px;font-weight:800;color:#ffffff;">Acme</div>
+      <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:26px;"><tr>
+        <td width="56" height="56" align="center" style="width:56px;height:56px;border-radius:28px;background:#16a3b5;background-image:linear-gradient(#16a3b5,#16a3b5);color:#ffffff;font-size:28px;font-weight:700;line-height:56px;"><div class="gm-screen"><div class="gm-diff">&#10003;</div></div></td>
+      </tr></table>
+      <div class="gm-screen"><div class="gm-diff">
+      <h1 style="margin:18px 0 6px;font-size:26px;line-height:1.25;font-weight:800;color:#ffffff;">Application received!</h1>
+      <p style="margin:0;font-size:15px;line-height:1.5;color:#b9d3e0;">Acme Internship · Career Fair 2026</p>
+      </div></div>
+    </td></tr>
+
+    <!-- Greeting -->
+    <tr><td class="px" style="padding:32px 32px 8px;font-size:15px;line-height:1.65;color:#3b475e;">
+      <p style="margin:0 0 14px;font-size:17px;color:#13213c;font-weight:700;">Hi Nurul Aisyah binti Kamarudin,</p>
+      <p style="margin:0 0 14px;">Thank you for your interest in joining our team, and it was great meeting you at the fair! We've received your application and will review your resume carefully.</p>
+    </td></tr>
+
+    <!-- Summary card -->
+    <tr><td class="px" style="padding:8px 32px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3fafb;border:1px solid #d3eef1;border-radius:14px;">
+        <tr><td colspan="2" style="padding:16px 20px 6px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#16a3b5;">Your application</td></tr>
+        <tr><td style="padding:6px 20px;font-size:14px;color:#64708a;width:40%;">Position</td><td style="padding:6px 20px 6px 0;font-size:14px;font-weight:700;color:#13213c;">Software Engineering</td></tr>
+        <tr><td style="padding:6px 20px;font-size:14px;color:#64708a;">Internship dates</td><td style="padding:6px 20px 6px 0;font-size:14px;font-weight:700;color:#13213c;">5 Jan 2027 – 30 Jun 2027</td></tr>
+        <tr><td style="padding:6px 20px;font-size:14px;color:#64708a;">University</td><td style="padding:6px 20px 6px 0;font-size:14px;font-weight:700;color:#13213c;">Asia Pacific University of Technology &amp; Innovation (APU)</td></tr>
+        <tr><td style="padding:6px 20px 16px;font-size:14px;color:#64708a;">Submitted</td><td style="padding:6px 20px 16px 0;font-size:14px;font-weight:700;color:#13213c;">9 Oct 2026</td></tr>
+      </table>
+    </td></tr>
+
+    <!-- What happens next -->
+    <tr><td class="px" style="padding:24px 32px 8px;">
+      <p style="margin:0 0 14px;font-size:16px;font-weight:800;color:#13213c;">What happens next</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;line-height:1.5;color:#3b475e;">
+        <tr>
+          <td width="40" valign="top" style="padding:0 0 16px;"><div style="width:28px;height:28px;border-radius:14px;background:#16a3b5;background-image:linear-gradient(#16a3b5,#16a3b5);color:#fff;font-weight:700;text-align:center;line-height:28px;font-size:14px;"><div class="gm-screen"><div class="gm-diff">&#10003;</div></div></div></td>
+          <td valign="top" style="padding:3px 0 16px;"><strong style="color:#13213c;">Application received</strong><br>You're all set, there's nothing else you need to do.</td>
+        </tr>
+        <tr>
+          <td width="40" valign="top" style="padding:0 0 16px;"><div style="width:28px;height:28px;border-radius:14px;background:#e3f6f8;color:#16a3b5;font-weight:800;text-align:center;line-height:28px;font-size:14px;">2</div></td>
+          <td valign="top" style="padding:3px 0 16px;"><strong style="color:#13213c;">We review your profile</strong><br>Our team looks at every application against our upcoming openings.</td>
+        </tr>
+        <tr>
+          <td width="40" valign="top"><div style="width:28px;height:28px;border-radius:14px;background:#e3f6f8;color:#16a3b5;font-weight:800;text-align:center;line-height:28px;font-size:14px;">3</div></td>
+          <td valign="top" style="padding-top:3px;"><strong style="color:#13213c;">We'll be in touch</strong><br>If your profile is a match, we'll contact you about the next steps.</td>
+        </tr>
+      </table>
+    </td></tr>
+
+    <!-- CTA -->
+    <tr><td class="px" align="center" style="padding:28px 32px 8px;">
+      <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+        <td align="center" bgcolor="#13213c" style="border-radius:12px;background:#13213c;background-image:linear-gradient(#13213c,#13213c);">
+          <div class="gm-screen" style="border-radius:12px;"><div class="gm-diff" style="border-radius:12px;"><a href="https://example.com/" style="display:inline-block;padding:14px 28px;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:12px;">Get to know Acme &rarr;</a></div></div>
+        </td>
+      </tr></table>
+    </td></tr>
+
+    <!-- Sign-off -->
+    <tr><td class="px" style="padding:24px 32px 32px;font-size:15px;line-height:1.65;color:#3b475e;">
+      <p style="margin:0 0 14px;">Thank you for your patience.</p>
+      <p style="margin:0;">Best regards,<br><strong style="color:#13213c;">The Acme Team</strong></p>
+    </td></tr>
+
+    <!-- Footer -->
+    <tr><td style="background:#f6f8fa;border-top:1px solid #e6ebf0;padding:20px 32px;font-size:12px;line-height:1.6;color:#8a94a8;text-align:center;">
+      You're receiving this because you applied for a Acme internship.<br>
+      This mailbox isn't monitored, so please don't reply to this email.
+    </td></tr>
+
+  </table>
+</td></tr>
+</table>
+</body>
+</html>
