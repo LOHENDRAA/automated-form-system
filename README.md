@@ -1,6 +1,6 @@
 # Automated Internship Application Form
 
-A career-fair application form that reads an applicant's CV and fills in the form for them, then hands off to a pre-filled Google Form. Built during my internship; company details have been replaced with a placeholder brand ("Acme").
+A career-fair application form that reads an applicant's CV and fills in the form for them, then hands off to a pre-filled Google Form. Built during my internship with [Mohamed Kaiser](https://github.com/ImLiquify), who built the OpenAI CV parser and Vercel deployment. Company details have been replaced with a placeholder brand ("Acme").
 
 ## What it does
 
